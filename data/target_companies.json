@@ -1,0 +1,6 @@
+{
+  "tier1": ["Google", "Microsoft", "Amazon", "Meta", "NVIDIA"],
+  "tier2": ["Databricks", "Snowflake", "Scale AI", "Cohere"],
+  "tier3": ["Salesforce", "Adobe", "IBM"],
+  "stretch": ["OpenAI", "Anthropic"]
+}

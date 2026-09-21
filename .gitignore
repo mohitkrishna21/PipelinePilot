@@ -1,0 +1,17 @@
+# environment variables / secrets
+.env
+
+# real personal job-search data — never commit
+my_pipeline.db
+
+# run logs
+logs/*.csv
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# OS
+.DS_Store
