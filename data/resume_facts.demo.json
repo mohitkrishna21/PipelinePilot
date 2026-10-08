@@ -1,0 +1,11 @@
+{
+  "skills": ["Python", "SQL", "FastAPI", "scikit-learn", "Docker"],
+  "projects": [
+    {"name": "Demo Project A", "summary": "Built a REST API that serves a trained classifier."},
+    {"name": "Demo Project B", "summary": "Built a small tool-calling agent over a SQLite database."}
+  ],
+  "experience": [
+    {"role": "ML Engineering Intern", "summary": "Trained and evaluated tabular models; wrote data validation checks."}
+  ],
+  "education": "MS Computer Science"
+}
