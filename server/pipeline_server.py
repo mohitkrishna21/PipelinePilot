@@ -95,6 +95,7 @@ def get_application(company: str):
         "SELECT * FROM applications WHERE company LIKE ?",
         (f"%{company}%",)
     )
+    
     rows = cursor.fetchall()
 
     if not rows:
@@ -474,15 +475,16 @@ def update_application(
 @mcp.tool()
 def mark_followed_up(company: str, draft_text: str):
     """
-    Record that a follow-up message was sent for an existing application.
+    Record that I (the user) followed up on an existing application. This tool
+    only updates the database. It does not send anything; I send messages myself.
 
     company must be the exact company name stored in the database. Use
     get_application first if you need to confirm the exact name.
 
-    draft_text is the follow-up message that was sent. The message is appended
-    to the application's notes with today's date. The application's
-    last_activity_date is refreshed, and any pending next_action and
-    next_action_date are cleared because the follow-up has been completed.
+    draft_text is the follow-up note I am sending, saved for my records. The
+    note is appended to the application's notes with today's date. The
+    application's last_activity_date is refreshed, and any pending next_action
+    and next_action_date are cleared because the follow-up has been completed.
 
     This tool assumes any required human approval has already happened before
     the tool is called.
@@ -519,7 +521,7 @@ def mark_followed_up(company: str, draft_text: str):
     )
     conn.commit()
 
-    return f"Marked follow-up as sent for {company} on {today}."
+    return f"Recorded follow-up for {company} on {today}. No message was sent."
 
 @mcp.resource("target-companies://{tier}")
 def get_target_companies(tier: str):
