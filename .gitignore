@@ -15,3 +15,7 @@ venv/
 
 # OS
 .DS_Store
+
+.venv-sdk/
+data/resume_facts.json
+sdk_sessions.db
