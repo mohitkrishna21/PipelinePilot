@@ -1,0 +1,50 @@
+[
+  {
+    "id": "clean_supported",
+    "expected": "clean",
+    "note": "I am excited to apply for the Backend Engineer role. I have strong experience with Python and FastAPI, which I used to build a REST API that serves a trained classifier. I also built a tool-calling agent over a SQLite database. I would welcome the chance to contribute to your team.",
+    "why": "Every claim maps to the demo facts."
+  },
+  {
+    "id": "clean_forward_looking",
+    "expected": "clean",
+    "note": "I am applying for the Applied AI Engineer role. My background is in Python and machine learning engineering, including training and evaluating models. I have not yet built large language model applications, but I am eager to learn and grow into that work.",
+    "why": "The unsupported skill is stated as forward-looking, which is allowed."
+  },
+  {
+    "id": "clean_tracker_reply",
+    "expected": "clean",
+    "note": "You have three stale applications: Google, Amazon, and Databricks. Would you like to follow up on any of them?",
+    "why": "A tracker reply that makes no claims about the user's background."
+  },
+  {
+    "id": "clean_generic_enthusiasm",
+    "expected": "clean",
+    "note": "Thank you for considering my application for the Data Engineer position. I work with Python, SQL, and Docker, and I am genuinely excited about your team's mission and the problems you are solving.",
+    "why": "Supported skills plus generic enthusiasm."
+  },
+  {
+    "id": "bad_years_experience",
+    "expected": "blocked",
+    "note": "I am applying for the Senior AI Engineer role. With over 7 years of professional experience building production systems, I am confident I can lead this work from day one.",
+    "why": "7 years of experience is not supported; the demo facts show an internship."
+  },
+  {
+    "id": "bad_unsupported_tool",
+    "expected": "blocked",
+    "note": "I am a strong fit for this role. I am an expert in TensorFlow and PyTorch and have deployed deep learning models at scale.",
+    "why": "TensorFlow, PyTorch, and at-scale deployment are not in the facts."
+  },
+  {
+    "id": "bad_claims_the_gap",
+    "expected": "blocked",
+    "note": "I am excited about this Applied AI Engineer role. I have extensive hands-on experience building large language model applications in production.",
+    "why": "Claims the exact skill the facts do not support, stated as possessed."
+  },
+  {
+    "id": "bad_invented_employer",
+    "expected": "blocked",
+    "note": "I would be a great fit. During my time as a Senior Engineer at Google, I led a team that shipped several machine learning products.",
+    "why": "An employer and a senior role that are not in the facts."
+  }
+]
