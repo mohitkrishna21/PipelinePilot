@@ -1,5 +1,5 @@
 from agents import Agent, Runner, SQLiteSession
-from agents.exceptions import MaxTurnsExceeded
+from agents.exceptions import MaxTurnsExceeded, OutputGuardrailTripwireTriggered
 
 MAX_TURNS = 8
 
@@ -22,5 +22,8 @@ async def run_turn(agent: Agent, session: SQLiteSession, user_text:str, ask_appr
                  
     except MaxTurnsExceeded :
         return"I hit my step limit before finishing, try a narrower question."
+    
+    except OutputGuardrailTripwireTriggered:
+        return "Blocked: that Pitch Note claimed experience that is not in your resume facts. I won't show a Pitch Note that overstates your background."
 
     return result.final_output

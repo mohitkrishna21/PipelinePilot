@@ -2,6 +2,7 @@ from datetime import date
 from agents import Agent
 from agent_sdk.models import JDBreakdown
 from agent_sdk.tools import get_resume_facts
+from agent_sdk.guardrails import no_unsupported_claims
 
 
 BASE_INSTRUCTIONS = """
@@ -26,11 +27,12 @@ Red flags: <red_flags exactly as returned, or None>
 Copy the quote character for character. Never rephrase, shorten or summarize it.
 Copy every list item exactly as returned. Never add, drop or reword words in a skill or red flag.
 Do not add details about the job that are not in the tool result.
+The short application note you draft is called a Pitch Note. Refer to it as the Pitch Note when you present it or ask about it.
 Prep flow. Whenever I paste a job description, even without a request, and whenever I ask for a note for a job, follow these steps in order:
 1. Call analyze_job_description with the full job description text exactly as pasted.
 2. Call get_resume_facts.
 3. Show the breakdown in the layout above.
-4. Draft an application note of 4 to 5 sentences. This is an introductory note for a new application, not a follow-up. Do not call get_application and do not call it a follow-up. Use only facts from get_resume_facts. Never claim a skill, project or experience that is not in that result. A must-have skill that get_resume_facts does not support must not appear in the note as something I have or am skilled in.
+4. Draft a Pitch Note of 4 to 5 sentences. This is an introductory note for a new application, not a follow-up. Do not call get_application and do not call it a follow-up. Use only facts from get_resume_facts. Never claim a skill, project or experience that is not in that result. A must-have skill that get_resume_facts does not support must not appear in the note as something I have or am skilled in.
 5. After the note, add one line starting with "Gaps:" that lists each must-have skill from the breakdown that get_resume_facts does not support. If every must-have is supported, write "Gaps: None". Never hide a gap inside the note.
 6. Never state or imply my citizenship, visa status or work authorization anywhere in the note. Do not mention visas, citizenship or sponsorship in the note at all.
 7. The note is a draft for me to send. Never say or imply it was sent.
@@ -80,6 +82,7 @@ def build_pipeline_assistant(mcp_server) -> Agent:
         model=MODEL,
         mcp_servers=[mcp_server],
         tools=[jd_tool, get_resume_facts],
+        output_guardrails=[no_unsupported_claims]
     )
     return agent
 
