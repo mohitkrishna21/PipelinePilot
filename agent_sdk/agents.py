@@ -2,7 +2,7 @@ from datetime import date
 from agents import Agent
 from agent_sdk.models import JDBreakdown
 from agent_sdk.tools import get_resume_facts
-from agent_sdk.guardrails import no_unsupported_claims
+from agent_sdk.guardrails import no_unsupported_claims, safe_input
 
 
 BASE_INSTRUCTIONS = """
@@ -82,6 +82,7 @@ def build_pipeline_assistant(mcp_server) -> Agent:
         model=MODEL,
         mcp_servers=[mcp_server],
         tools=[jd_tool, get_resume_facts],
+        input_guardrails=[safe_input],
         output_guardrails=[no_unsupported_claims]
     )
     return agent
