@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Smoke tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      # Only the app-venv deps are needed here. The smoke tests mock out
+      # get_or_open_session/run_turn (see tests/test_smoke.py), so the real
+      # MCP server subprocess never actually starts during CI - no need to
+      # install fastmcp/mcp 2.x for this job.
+      - name: Install dependencies
+        run: |
+          pip install --no-cache-dir -r requirements.app.txt
+          pip install --no-cache-dir pytest==9.1.1 pluggy==1.7.0 iniconfig==2.3.1
+
+      - name: Run pytest
+        env:
+          # conftest.py already does os.environ.setdefault("OPENAI_API_KEY", ...)
+          # before importing web.app, so this isn't strictly required - set
+          # explicitly anyway so CI doesn't silently depend on that staying true.
+          OPENAI_API_KEY: ci-placeholder-key
+        run: pytest -v
+
+  docker-build:
+    name: Docker image builds
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Build-only, no run: this exists to catch Dockerfile breakage (a bad
+      # COPY path, a dependency that stops resolving, etc.) on every push,
+      # not to smoke-test the running container - that still needs a real
+      # .env and is better done locally before a deploy.
+      - name: Build image
+        run: docker build -t pipelinepilot:ci .

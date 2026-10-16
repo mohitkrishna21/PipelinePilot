@@ -1,0 +1,42 @@
+# Secrets - never baked into the image, passed at runtime via --env-file
+.env
+*.env
+
+# Real pipeline data - only the demo DB and demo resume facts should ever
+# ship in the image. I'm guessing the real-data filenames below based on
+# "db/demo_pipeline.db" being the demo one (confirmed from
+# pipeline_server.py) - double check these match your actual filenames
+# before building, and adjust if the real ones are named differently.
+db/pipeline.db
+data/resume_facts.json
+
+# Runtime/session state - created fresh by the container, never copied in
+*sdk_sessions.db
+logs/
+__pycache__/
+*.pyc
+*.pyo
+
+# Local venvs - the image builds its own from requirements.*.txt
+.venv/
+.venv-sdk/
+venv/
+
+# Frontend - built separately (npm run build) and served by Nginx,
+# not part of this image
+frontend/
+
+# v1 hand-built CLI - not part of the deployed web service
+agent/
+
+# Tests, evals, docs - not needed at runtime
+tests/
+evals/
+*.md
+
+# VCS / editor / OS cruft
+.git/
+.gitignore
+.vscode/
+.idea/
+.DS_Store
