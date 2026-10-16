@@ -1,0 +1,476 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #F4F6F8;
+  --surface: #FFFFFF;
+  --border: #E3E7EC;
+  --text: #0F172A;
+  --muted: #5B6676;
+  --teal: #0B7A66;
+  --teal-soft-bg: #E3F4F0;
+  --teal-soft-fg: #075E4E;
+  --amber-bg: #FEF3C7;
+  --amber-fg: #92400E;
+  --amber-fg-dark: #7A3410;
+  --red-bg: #FDECEC;
+  --red-fg: #912018;
+  --grey-bg: #EEF1F5;
+  --grey-fg: #334155;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+#root {
+  height: 100%;
+}
+
+button { font-family: inherit; cursor: pointer; }
+textarea { font-family: inherit; }
+
+.pp-mono { font-family: 'IBM Plex Mono', monospace; }
+
+.pp-muted { font-size: 13px; color: var(--muted); }
+.pp-muted--small { font-size: 12px; color: var(--muted); }
+.pp-error-text { font-size: 13px; color: var(--red-fg); }
+
+.pp-sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+}
+
+/* ---------- Buttons & pills ---------- */
+
+.pp-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #D5DAE1;
+  background: var(--surface);
+  color: var(--text);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.pp-btn--ghost { background: var(--surface); }
+.pp-btn--copied {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #FFFFFF;
+}
+.pp-btn--primary {
+  height: 40px;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  background: var(--teal);
+  color: #FFFFFF;
+}
+.pp-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.pp-pill {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.pp-pill--teal { background: var(--teal-soft-bg); color: var(--teal-soft-fg); }
+.pp-pill--teal-soft { display: inline-flex; align-items: center; gap: 6px; background: var(--teal-soft-bg); color: var(--teal-soft-fg); font-size: 11px; }
+.pp-pill--teal-dark { background: #13324A; color: #6FD3BE; }
+.pp-pill--grey { background: var(--grey-bg); color: var(--grey-fg); font-size: 11px; }
+
+.pp-chip-btn {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid #D5DAE1;
+  background: var(--surface);
+  color: var(--grey-fg);
+  font-size: 13px;
+}
+.pp-chip-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.pp-divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ---------- Header ---------- */
+
+.pp-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 12px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; letter-spacing: -0.01em; }
+.pp-header__spacer { flex-grow: 1; }
+.pp-header__stat { font-size: 13px; color: var(--muted); }
+.pp-header__stat--muted { color: var(--muted); }
+
+/* ---------- Layout ---------- */
+
+.pp-app { min-height: 100vh; display: flex; flex-direction: column; }
+.pp-layout { flex-grow: 1; display: flex; flex-wrap: wrap; align-items: stretch; }
+
+/* Desktop only: pin the whole app to the viewport and let each column
+   scroll on its own, so the header and side panels never move when you
+   scroll the chat. Below 901px the columns stack (see the 900px query
+   further down), where a fixed-height shell would just clip content, so
+   the ordinary whole-page scroll is left in place there instead. */
+@media (min-width: 901px) {
+  /* Grid, not flexbox, for the shell: a flex-grow value has to propagate
+     through three nested "stretch" levels (app -> layout -> main) to reach
+     the chat column, and if any one of those doesn't resolve to a definite
+     height, the whole chain silently falls back to content-sized boxes and
+     nothing scrolls. Grid's `1fr` row/column tracks are definite in one
+     step directly from the 100vh container, which is why this version is
+     the one to trust. */
+  .pp-app {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+  }
+
+  .pp-layout {
+    display: grid;
+    grid-template-columns: 290px minmax(0, 1fr) minmax(320px, 440px);
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .pp-sidebar { overflow-y: auto; min-height: 0; }
+  .pp-inspector { overflow-y: auto; min-height: 0; max-width: none; }
+  .pp-main { overflow: hidden; min-height: 0; min-width: 0; }
+}
+
+/* ---------- Sidebar ---------- */
+
+.pp-sidebar {
+  flex: 0 0 290px;
+  padding: 20px 16px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pp-sidebar__head { display: flex; align-items: baseline; justify-content: space-between; }
+.pp-sidebar__head h2 { margin: 0; font-size: 14px; font-weight: 600; }
+.pp-sidebar__list { display: flex; flex-direction: column; gap: 4px; }
+.pp-sidebar__note { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+
+.pp-app-card {
+  padding: 10px 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pp-app-card__top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pp-app-card__company { font-weight: 600; font-size: 14px; }
+
+.pp-status-pill {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ---------- Chat ---------- */
+
+.pp-main {
+  flex: 999 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 28px 20px;
+}
+.pp-chat-scroll { flex-grow: 1; overflow-y: auto; min-height: 0; }
+.pp-chat-inner {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pp-bubble {
+  padding: 12px 16px;
+  border-radius: 14px;
+  max-width: 92%;
+  /* The model's text has real line breaks between list items; without this,
+     the browser's default whitespace handling collapses them all into one
+     run-on paragraph. */
+  white-space: pre-wrap;
+}
+.pp-bubble--user {
+  align-self: flex-end;
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--text);
+  color: #FFFFFF;
+}
+.pp-bubble--assistant {
+  border-radius: 14px 14px 14px 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.pp-bubble--guardrail {
+  border-radius: 14px 14px 14px 4px;
+  background: #FFF8E6;
+  border: 1px solid #F3D9A0;
+  color: #5B3A12;
+}
+.pp-bubble--error {
+  border-radius: 14px 14px 14px 4px;
+  background: var(--red-bg);
+  border: 1px solid #E3C7C3;
+  color: #6B2A23;
+}
+
+.pp-assistant-turn { display: flex; flex-direction: column; gap: 8px; max-width: 92%; }
+.pp-assistant-turn__tools { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.pp-tool-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--grey-bg);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--grey-fg);
+}
+.pp-tool-chip__result { color: var(--muted); }
+
+/* ---------- Pitch Note callout (inline, under the chat bubble it belongs to) ---------- */
+
+.pp-pitch-callout {
+  max-width: 92%;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--teal-soft-bg);
+  border: 1px solid #BFE4DA;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pp-pitch-callout__head { display: flex; align-items: center; justify-content: space-between; }
+.pp-pitch-callout__title { font-size: 13px; font-weight: 600; color: var(--teal-soft-fg); }
+.pp-pitch-callout__body { margin: 0; font-size: 14px; color: #0B3B32; white-space: pre-wrap; }
+.pp-pitch-callout__gaps { margin: 0; font-size: 13px; color: #0B5345; }
+
+/* ---------- Approval card ---------- */
+
+.pp-approval-card {
+  max-width: 92%;
+  padding: 16px;
+  border-radius: 14px;
+  background: #FFF8E6;
+  border: 1px solid #F3D9A0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pp-approval-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--amber-fg-dark);
+}
+.pp-approval-card__body {
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid #F3E4BC;
+  color: var(--grey-fg);
+}
+.pp-approval-card__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.pp-approval-card__timer { font-size: 12px; color: var(--amber-fg-dark); }
+
+/* ---------- Composer ---------- */
+
+.pp-composer-wrap { width: 100%; max-width: 720px; margin: 20px auto 0; }
+.pp-composer { display: flex; flex-direction: column; gap: 10px; }
+.pp-composer__quick-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.pp-composer__row {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 10px 10px 10px 16px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid #D5DAE1;
+}
+.pp-composer__row textarea {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font-size: 15px;
+  color: var(--text);
+}
+.pp-composer__row textarea:disabled { color: var(--muted); }
+
+.pp-send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pp-send-btn:disabled { background: #CBD3DC; cursor: not-allowed; }
+
+.pp-composer__footnote { font-size: 12px; color: var(--muted); text-align: center; }
+
+/* ---------- Inspector / JD panel ---------- */
+
+.pp-inspector {
+  flex: 1 1 380px;
+  max-width: 440px;
+  padding: 20px 20px 28px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.pp-jd-panel { display: flex; flex-direction: column; gap: 14px; }
+.pp-jd-panel--empty { gap: 8px; }
+.pp-jd-panel__head { display: flex; align-items: center; justify-content: space-between; }
+.pp-jd-panel h2, .pp-pitch-note h2 { margin: 0; font-size: 14px; font-weight: 600; }
+
+.pp-field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pp-field-group { display: flex; flex-direction: column; gap: 8px; }
+.pp-field-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pp-field-value { font-weight: 600; }
+
+.pp-auth-badge { padding: 12px 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; }
+.pp-auth-badge__label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+.pp-auth-badge__quote { margin: 0; font-size: 13px; font-style: italic; opacity: 0.85; }
+
+.pp-tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.pp-tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; font-weight: 500; }
+.pp-tag--green { background: var(--teal-soft-bg); color: var(--teal-soft-fg); }
+.pp-tag--grey { background: var(--grey-bg); color: var(--grey-fg); }
+
+.pp-flag-list { margin: 0; padding-left: 18px; font-size: 14px; color: var(--grey-fg); display: flex; flex-direction: column; gap: 4px; }
+
+.pp-pitch-note { display: flex; flex-direction: column; gap: 12px; }
+.pp-pitch-note__head { display: flex; align-items: center; justify-content: space-between; }
+.pp-pitch-note__body {
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--bg);
+  font-size: 14px;
+  color: #1E293B;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pp-pitch-note__body p { margin: 0; }
+
+/* ---------- Responsive: stack panels on narrow screens ---------- */
+
+@media (max-width: 900px) {
+  .pp-sidebar { flex-basis: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+  .pp-inspector { flex-basis: 100%; max-width: none; border-left: none; border-top: 1px solid var(--border); }
+}
+
+/* ---------- Dashboard ---------- */
+
+.pp-dashboard {
+  min-height: 100vh;
+  padding: 28px 32px;
+  background: #0F172A;
+  color: #E6EBF2;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.pp-dashboard__head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.pp-dashboard__title { font-weight: 600; font-size: 17px; }
+
+.pp-stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 800px) { .pp-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.pp-stat-tile {
+  padding: 16px;
+  border-radius: 14px;
+  background: #172338;
+  border: 1px solid #22304A;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pp-stat-tile__label { font-size: 12px; color: #8A97A8; text-transform: uppercase; letter-spacing: 0.04em; }
+.pp-stat-tile__value { font-size: 30px; font-weight: 600; }
+.pp-stat-tile__sub { font-size: 12px; color: #6FD3BE; }
+
+.pp-dashboard__panels { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+@media (max-width: 900px) { .pp-dashboard__panels { grid-template-columns: 1fr; } }
+
+.pp-panel--dark {
+  padding: 18px;
+  border-radius: 14px;
+  background: #172338;
+  border: 1px solid #22304A;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 260px;
+}
+.pp-panel__title { font-size: 14px; font-weight: 600; }
+.pp-panel__footnote { margin-top: auto; padding-top: 12px; border-top: 1px solid #22304A; font-size: 12px; color: #8A97A8; }
+
+.pp-latency-bars { flex-grow: 1; display: flex; align-items: flex-end; gap: 28px; }
+.pp-latency-pair { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; }
+.pp-latency-pair__bars { flex-grow: 1; width: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 12px; }
+.pp-latency-pair__bar { width: 38px; border-radius: 6px 6px 0 0; min-height: 4px; }
+.pp-latency-legend { display: flex; flex-direction: column; gap: 10px; align-self: center; margin-left: 12px; }
+.pp-latency-legend span { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #C4CEDC; }
+.pp-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+.pp-outcome-list { display: flex; flex-direction: column; gap: 12px; }
+.pp-outcome-bar { display: flex; flex-direction: column; gap: 5px; }
+.pp-outcome-bar__row { display: flex; justify-content: space-between; font-size: 13px; }
+.pp-outcome-bar__track { height: 8px; border-radius: 999px; background: #22304A; }
+.pp-outcome-bar__fill { height: 100%; border-radius: 999px; }

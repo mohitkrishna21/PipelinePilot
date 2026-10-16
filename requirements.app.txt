@@ -1,0 +1,10 @@
+fastapi==0.143.2
+uvicorn==0.54.0
+python-multipart==0.0.32
+sse-starlette==3.5.0
+python-dotenv==1.2.4
+openai==3.26.0
+openai-agents==0.22.3
+mcp==1.30.0
+pydantic==2.13.5
+pydantic-settings==2.15.0
