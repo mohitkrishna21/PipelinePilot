@@ -1,11 +1,42 @@
 {
-  "skills": ["Python", "SQL", "FastAPI", "scikit-learn", "Docker"],
+  "skills": [
+    "Python", "TypeScript", "SQL", "Django", "Express.js",
+    "Docker", "Kubernetes (basics)", "GCP (Cloud Run, Cloud SQL)",
+    "Git", "CI/CD (GitHub Actions)", "pytest",
+    "PyTorch", "scikit-learn",
+    "LangChain", "OpenAI API",
+    "RAG (Retrieval-Augmented Generation)",
+    "Vector Databases (Pinecone, Chroma)",
+    "Agentic Tool-Calling",
+    "REST & GraphQL APIs", "PostgreSQL", "Asyncio", "Prompt Engineering"
+  ],
   "projects": [
-    {"name": "Demo Project A", "summary": "Built a REST API that serves a trained classifier."},
-    {"name": "Demo Project B", "summary": "Built a small tool-calling agent over a SQLite database."}
+    {
+      "name": "Demo Project A",
+      "summary": "Built and deployed a RAG-based support assistant combining semantic search over internal docs with an LLM response layer, served via a Django backend and containerized with Docker on GCP Cloud Run."
+    },
+    {
+      "name": "Demo Project B",
+      "summary": "Built a tool-calling agent that reads and writes to a Postgres database through a set of typed functions, with a human-in-the-loop approval step before any write action."
+    },
+    {
+      "name": "Demo Project C",
+      "summary": "Built a document classification pipeline comparing a fine-tuned transformer against a classical baseline, with a reproducible evaluation harness."
+    },
+    {
+      "name": "Demo Project D",
+      "summary": "Built a natural-language search tool over a product catalog using embedding-based retrieval, with a lightweight React frontend."
+    }
   ],
   "experience": [
-    {"role": "ML Engineering Intern", "summary": "Trained and evaluated tabular models; wrote data validation checks."}
+    {
+      "role": "Software Engineering Intern",
+      "summary": "Built and maintained internal REST APIs; contributed test coverage and participated in code review for a backend service used across three teams."
+    },
+    {
+      "role": "Machine Learning Engineer",
+      "summary": "Trained and evaluated classification models; built data validation checks and automated reporting for a recurring pipeline."
+    }
   ],
-  "education": "MS Computer Science"
+  "education": "MS Computer Science (in progress)"
 }
